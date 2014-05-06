@@ -1,4 +1,4 @@
-#!/usr/bin/env Python3
+#!/usr/bin/env python3
 
 import sys
 
@@ -10,7 +10,7 @@ print ('\n')
 class UI:
 	#Initialize monsters
 	monsterEngaged = False
-	command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, statistics.  The help command lists what each command does.  ")
+	command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does.  ")
 	print ("To quit type: quit")
 	while command != "quit":
 		print ('\n')
@@ -42,8 +42,8 @@ class UI:
 			else:
 				#Call disengage function
 				monsterEngaged = False
-				print ("There is honor in retreat...Maybe", '\n')
-		elif command == "statistics":
+				print ("When you fight and run away....You live to fight another day.", '\n')
+		elif command == "stats":
 			print ("Your health: ", '\n')
 			print ("Your weapon: ", '\n')
 			if monsterEngaged == True:
@@ -55,11 +55,14 @@ class UI:
 			print ("defend     - defends against the monster's next attack", '\n')
 			print ("retreat    - retreats from the monster you are attacking", '\n')
 			print ("help       - displays commands", '\n')
-			print ("statistics - displays your statistics and those of the monster you are currently fighting", '\n')
+			print ("stats      - displays your statistics and those of the monster you are currently fighting", '\n')
 			print ("pick up    - picks up the defeated monster's weapon", '\n')
 			print ("quit       - exits the game", '\n')
 		elif command == "pick up":
-			print ("You now have this weapon", '\n')
+			if monsterEngaged == False:
+				print ("You are not engaged with a monster, or the monster is not yet dead so there is no waepon to pick up.", '\n')
+			else:
+				print ("You now have this weapon", '\n')
 		else:
 			print (command)
 		
