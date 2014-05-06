@@ -9,8 +9,9 @@ print ("Welcome to the world.  Here you must clean the world of monsters.  Each 
 print ('\n')
 
 weapon = randint(0,4)
-
-
+#yourWeapon = dict[weapon]
+yourWeapon = "Great Sword"
+yourHealth = 20
 for i in range(0,4):
 	num = randint(0,4)
 
@@ -20,7 +21,7 @@ monsterEngaged = False
 monsterDead = False
 MonsterCount = 0
 gameOver = False
-command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit  ")
+command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit \n")
 while command != "quit":
 	print ('\n')
 	if command == "monster":#Engages the monster
@@ -39,7 +40,7 @@ while command != "quit":
 			print("You are not engaged with a monster. Enter a new command.", '\n')
 		else:
 			#Call attack function
-			print ("Your health: ", '\n')
+			print ("Your health: ", yourHealth, '\n')
 			print ("Monster health: ", '\n')
 	elif command == "defend": #Defends against the monster's attack unless not engaged with one
 		if monsterEngaged == False:
@@ -47,7 +48,7 @@ while command != "quit":
 		else:
 			#Call defend function
 			print ("SHIELD SHIELD!", '\n')
-			print ("Your health: ", '\n')
+			print ("Your health: ", yourHealth, '\n')
 			print ("Monster health: ", '\n')
 	elif command == "retreat": #Retreats from the battle
 		if monsterEngaged == False:
@@ -57,8 +58,8 @@ while command != "quit":
 			monsterEngaged = False
 			print ("When you fight and run away....You live to fight another day.", '\n')
 	elif command == "stats": #Displays your health and weapon, and if you are fighting a monster, displays its health and weapon
-		print ("Your health: ", '\n')
-		print ("Your weapon: ", '\n')
+		print ("Your health: ", yourHealth, '\n')
+		print ("Your weapon: ", yourWeapon, '\n')
 		if monsterEngaged == True:
 			print ("Monster's Health: ", '\n')
 			print ("Monster's Weapon: ", '\n')
@@ -72,10 +73,12 @@ while command != "quit":
 		print ("pick up    - picks up the defeated monster's weapon", '\n')
 		print ("quit       - exits the game", '\n')
 	elif command == "pick up":#Also need to scheck if monster is dead
-		if monsterEngaged == False:
-			print ("You are not engaged with a monster, or the monster is not yet dead so there is no weapon to pick up.", '\n')
+		if monsterEngaged == True:
+			print ("The monster is not yet dead so there is no weapon to pick up.", '\n')
+		elif monsterDead == True:
+				print ("You now have this weapon", '\n')
 		else:
-			print ("You now have this weapon", '\n')
+			print ("You are not engaged with a monster.", '\n')
 	elif command == "What is the answer to life, the universe, and everything?":
 		print ("42", '\n')
 	else:
