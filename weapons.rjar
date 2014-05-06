@@ -1,0 +1,19 @@
+Class: 0
+Name: Aluminum Dagger
+Attack: 2
+%%
+Class: 1
+Name: Bronze Sword
+Attack: 4
+%%
+Class: 2
+Name: Iron Mace
+Attack: 6
+%%
+Class: 3
+Name: Steel Battleaxe
+Attack: 8
+%%
+Class: 4
+Name: Abyssal Whip
+Attack: 10
