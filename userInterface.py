@@ -3,6 +3,13 @@
 import sys
 from random import randint
 
+from record_jar_reader import record_jar_reader
+test = record_jar_reader()
+test.loadFiles('data.rjar', 'weapons.rjar')
+monsters = test.getMonsters()
+weapons = test.getWeapons()
+
+
 print ('\n')
 print ("Welcome to the world.  Here you must clean the world of monsters.  Each monster will have a weapon on varying power.  Take care, as the monster might have more strength than you.  Remember retreat is a viable option.")
 
@@ -10,11 +17,15 @@ print ('\n')
 
 weapon = randint(0,4)
 #yourWeapon = dict[weapon]
-yourWeapon = "Great Sword"
+yourWeaponDict = weapons[weapon]
+yourWeapon = yourWeaponDict['Name']
 yourHealth = 20
-for i in range(0,4):
-	num = randint(0,4)
+num = randint(0,4)
+currentMonster = {}
 
+#monster call list entry return dict
+currentMonster = monsters[num]
+#weapons call list entry return dict
 
 #Initialize monsters
 monsterEngaged = False
