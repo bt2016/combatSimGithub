@@ -7,8 +7,8 @@ class record_jar_reader:
 		self.weapons = {}
 
 	def loadFiles(self, file1, file2):
-		self.monsters = load_records( open(file1, 'r') )
-		self.weapons = load_records( open(file2, 'r') )
+		self.monsters = self.load_records( open('data.rjar', 'r') )
+		self.weapons = self.load_records( open('weapons.rjar', 'r') )
 
 
 	def record_reader(self,flo):
@@ -24,7 +24,7 @@ class record_jar_reader:
         	yield record
 
 	def load_records(self,flo):
-		return [ record for record in record_reader(flo) ]
+		return [ record for record in self.record_reader(flo) ]
 
 	def printMonsters(self):
 		from pprint import pprint
@@ -32,3 +32,6 @@ class record_jar_reader:
 
 	def getMonsters(self):
 		return self.monsters
+
+	def getWeapons(self):
+		return self.weapons
