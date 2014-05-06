@@ -25,13 +25,14 @@ num = randint(0,4)
 currentMonsterDict = monsters[num]
 monterName = currentMonsterDict['Name']
 
+print ("Health:      ", yourHealth, '\n')
 print ("Your weapon: ", yourWeapon, '\n')
 print ("Your attack: ", yourAttack, '\n')
 
 #monster call list entry return dict
 currentMonster = monsters[num]
 #weapons call list entry return dict
-
+monsterDied = 0
 #Initialize monsters
 monsterEngaged = False
 monsterDead = False
@@ -79,6 +80,7 @@ while command != "quit":
 			if newMonsterHealth <=0:
 				monsterDead = True
 				monsterEngaged = False
+				monsterDied +=1
 				nextMonster = True
 				print("You killed the monster", '\n')
 			if newHealth <= 0:
@@ -140,6 +142,7 @@ while command != "quit":
 		print ("Invalid Command.  Please use: monster, attack, defend, retreat, help, stats, pick up, or quit", '\n')
 	
 	if gameOver == True:
+		print("You killed ", monsterDied, "monsters", '\n')
 		command = "quit"
 	else:
 		command = input("Command:   ")
