@@ -25,6 +25,9 @@ num = randint(0,4)
 currentMonsterDict = monsters[num]
 monterName = currentMonsterDict['Name']
 
+print ("Your weapon: ", yourWeapon, '\n')
+print ("Your attack: ", yourAttack, '\n')
+
 #monster call list entry return dict
 currentMonster = monsters[num]
 #weapons call list entry return dict
@@ -37,6 +40,7 @@ gameOver = False
 nextMonster = True
 newHealth = int(yourHealth)
 command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit \n")
+
 while command != "quit":
 	print ('\n')
 	if command == "monster":#Engages the monster
@@ -49,10 +53,14 @@ while command != "quit":
 				monsterAttack = currentMonsterDict['Attack']
 				nextMonster = False
 				newMonsterHealth = int(monsterHealth)
+				weapon2 = randint(0,4)
+				monstWeap = weapons[weapon2]
+				monsterWeapon = monstWeap['Name']
 			print ("You are now engaged with this monster:", '\n')
 			print ("Name: ", monsterName, '\n')
 			print ("Health: ", monsterHealth, '\n')
 			print ("Attack: ", monsterAttack, '\n')
+			print ("Weapon: ", monsterWeapon, '\n')
 			monsterEngaged = True
 			monsterDead = False
 			#Call function to engage monster
@@ -121,7 +129,9 @@ while command != "quit":
 		if monsterEngaged == True:
 			print ("The monster is not yet dead so there is no weapon to pick up.", '\n')
 		elif monsterDead == True:
-				print ("You now have this weapon", '\n')
+				print ("You now have this weapon: ", monsterWeapon, '\n')
+				yourWeapon = monsterWeapon
+				yourAttack = monstWeap['Attack']
 		else:
 			print ("You are not engaged with a monster.", '\n')
 	elif command == "What is the answer to life, the universe, and everything?":
