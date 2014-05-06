@@ -1,0 +1,24 @@
+Class: 0
+Name: Diseased Soul
+Health: 5
+Attack: 1
+%%
+Class: 1
+Name: Skeleton
+Health: 10
+Attack: 2
+%%
+Class: 2
+Name: Baby Dragon
+Health: 15
+Attack: 4
+%%
+Class: 3
+Name: Troll
+Health: 18
+Attack: 5
+%%
+Class: 4
+Name: Black Skull Dragon
+Health: 20
+Attack: 6
