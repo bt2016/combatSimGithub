@@ -75,8 +75,8 @@ while command != "quit":
 			newHealth = newHealth - int(monsterAttack)
 			newMonsterHealth = newMonsterHealth - int(yourAttack)
 			print ("Your health: ", newHealth)
-			print ("Monster health: ", newMonsterHealth)
-			if newMonsterHealth <=0:
+			print ("Monster health: ", currentMonster.HP)
+			if currentMonster.HP <=0:
 				monsterDead = True
 				monsterEngaged = False
 				monsterDied +=1
@@ -96,10 +96,10 @@ while command != "quit":
 			if mod == 0:
 				mod = 0.10
 			mod2 = 1/mod
-			newHealth -= mod2*int(monsterAttack)
+			newHealth -= mod2*int(currentMonster.ATK)
 			print ("SHIELD SHIELD!")
 			print ("Your health: ", newHealth)
-			print ("Monster health: ", newMonsterHealth)
+			print ("Monster's Health: ", currentMonster.HP)
 			if newHealth <= 0:
 				gameOver = True
 	elif command == "retreat": #Retreats from the battle
