@@ -40,8 +40,8 @@ MonsterCount = 0
 gameOver = False
 nextMonster = True
 newHealth = int(yourHealth)
-command = input("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit \n")
-
+print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit \n")
+command = input("Command:    ")
 while command != "quit":
 	print ('\n')
 	if command == "monster":#Engages the monster
@@ -109,6 +109,7 @@ while command != "quit":
 		else:
 			#Call disengage function
 			monsterEngaged = False
+			newHealth += (newHealth/2)
 			print ("When you fight and run away....You live to fight another day.", '\n')
 	elif command == "stats": #Displays your health and weapon, and if you are fighting a monster, displays its health and weapon
 		print ("Your health: ", newHealth, '\n')
