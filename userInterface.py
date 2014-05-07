@@ -2,6 +2,7 @@
 
 import sys
 from random import randint
+import Ent
 
 from record_jar_reader import record_jar_reader
 test = record_jar_reader()
@@ -9,7 +10,8 @@ test.loadFiles('data.rjar', 'weapons.rjar')
 monsters = test.getMonsters()
 weapons = test.getWeapons()
 
-
+currentMonster = Ent.Monster()
+currentWeapon = Ent.Item()
 print ('')
 print ("Welcome to the world.  Here you must clean the world of monsters.  Each monster will have a weapon of varying power.  Take care, as the monster might have more strength than you.  Remember retreat is a viable option.")
 
@@ -18,9 +20,10 @@ print ('\n')
 weapon = randint(0,4)
 #yourWeapon = dict[weapon]
 yourWeaponDict = weapons[weapon]
-yourWeapon = yourWeaponDict['Name']
+yourCurrentWeapon = Ent.GenWeapon(yourWeaponDict)
+yourWeapon = yourCurrentWeapon.name
 yourHealth = 20
-yourAttack = yourWeaponDict['Attack']
+yourAttack = yourCurrentWeapon.ATK
 num = randint(0,4)
 currentMonsterDict = monsters[num]
 monterName = currentMonsterDict['Name']
@@ -52,18 +55,12 @@ while command != "quit":
 			if nextMonster == True:
 				num = randint(0,4)
 				currentMonsterDict = monsters[num]
-				monsterName = currentMonsterDict['Name']
-				monsterHealth = currentMonsterDict['Health']
-				monsterAttack = currentMonsterDict['Attack']
+				currentMonster = Ent.GenMonster(currentMonsterDict)
 				nextMonster = False
-				newMonsterHealth = int(monsterHealth)
 				weapon2 = randint(0,4)
 				monstWeap = weapons[weapon2]
-				monsterWeapon = monstWeap['Name']
 			print ("You are now engaged with this monster:")
-			print ("Name: ", monsterName)
-			print ("Health: ", newMonsterHealth)
-			print ("Attack: ", monsterAttack)	
+			print (currentMonster)
 			monsterEngaged = True
 			monsterDead = False
 			#Call function to engage monster
@@ -128,9 +125,7 @@ while command != "quit":
 		print ("Your weapon: ", yourWeapon)
 		print ("Your attack: ", yourAttack)
 		if monsterEngaged == True:
-			print ("Monster's Name:   ", monsterName)
-			print ("Monster's Health: ", newMonsterHealth)
-			print ("Monster's Attack: ", monsterAttack)
+			print ("Monster's ", currentMonster)
 	elif command == "help":#Outputs all of the commangs and what they do
 		print ("monster    - engages a monster in combat")
 		print ("attack     - attacks the monster")
