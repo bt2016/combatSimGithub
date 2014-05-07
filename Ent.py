@@ -109,6 +109,7 @@ def Focus(source):
 class Item:
 	# Prints out item name, and whether it is equipped
 	def __str__(self):
+		toReturn  = ""
 		if self.name.startswith(('a', 'e', 'i', 'o', 'u')):
 			toReturn += "An "
 		else:
@@ -173,7 +174,7 @@ class Player:
 		self.inventory = []
 
 	def __str__(self):
-		toReturn = "You, " + self.name + ", have " + str(self.HP) + "/" + str(self.Max_HP) + " HP"
+		toReturn = "You, " + self.name + ", have " + str(self.HP) + "/" + str(self.Max_HP) + " Health"
 		return toReturn
 
 	# Prints ou the player's inventory, along with the slot number
