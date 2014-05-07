@@ -43,7 +43,7 @@ def Attack(source, target):
 		if status.type is "DEF_BUFF":
 			ATK_Multiplier -= status.modifier
 			if status.lifeTime == 0:
-				(source.status).remove(status)
+				(target.status).remove(status)
 			else:
 				status.lifeTime -= 1
 			print(str(target.name) + StatusMessages[status.name])
@@ -59,15 +59,22 @@ def Attack(source, target):
 	
 	# Seperate message for no damage
 	if damage <= 0:
-		print(str(target.name) + " takes no damage")
+		print(str(source.name) + " attacks, and " + str(target.name) + " takes no damage")
 	# Otherwise prints out how much damage was dealth, decrements target HP
 	else:
-		print(str(target.name) + " is hit for " + str(damage) + " points of damage")
 		target.HP -= damage
+		if target.HP < 0:
+			target.HP = 0
+		print(str(source.name) + " attacks, " + str(target.name) + " is hit for " + str(damage) + " points of damage")
 	return
 
 # Applies the DEFEND status effect on the given ENT
 def Defend(source):
+	# Removes ATK_BUFF statuses
+	if any(status.name == "FOCUS" for status in source.status):
+		print(str(source.name) + " loses its focus")
+	for status in [status for status in source.status if status.type is "ATK_BUFF"]:
+		(source.status).remove(status)
 	# Checks to see if the ENT is already defending first
 	if not any(status.name == "DEFEND" for status in source.status):
 		# Prints message, applies status effect	
@@ -78,26 +85,35 @@ def Defend(source):
 
 # Applies the FOCUS status effect on the given ENT
 def Focus(source):
-	# If not already focused, adds the effect w/ a 25% strength
+	# If not already focused, adds the effect w/ a +100% strength
 	if not any(status.name == "FOCUS" for status in source.status):
-		(source.status).append(Status("ATK_BUFF", "FOCUS", 0.25))
+		(source.status).append(Status("ATK_BUFF", "FOCUS", 1))
 		print(str(source.name) + " begins focusing!")
 	else:
 		# Otherwises find it and increases its strength
-		for status in source.status and status.name == "FOCUS" and status.modifier < 1.5:
-			# Buff gets stronger the more times it is applied
-			#	starting at 25%, then 50%, then 150%
-			status.modifier += status.modifier / 0.5
-			print(str(source.name) + " intensifies their focus!")
-		else:
-			# If buff is already at max strength, say so
-			print(str(source.name) + " can't focus any harder!")
+		for status in source.status:
+			if status.name == "FOCUS":
+				if status.modifier < 4:
+					# Buff gets stronger the more times it is applied
+					#	starting at 100%, then 200%, then 400%
+					status.modifier *= 2
+					if status.modifier >= 4:
+						print(str(source.name) + "'s focus reaches its peak!")
+					else:
+						print(str(source.name) + " intensifies their focus!")
+				else:
+					# If buff is already at max strength, say so
+					print(str(source.name) + " can't focus any harder!")
 
 # Represents an item, which may or may not be equippable
 class Item:
 	# Prints out item name, and whether it is equipped
 	def __str__(self):
-		toReturn = "A(n) " + str(self.name)
+		if self.name.startswith(('a', 'e', 'i', 'o', 'u')):
+			toReturn += "An "
+		else:
+			toReturn += "A "
+		toReturn += str(self.name)
 		if hasattr(self, 'equipped') and self.equipped == 1:
 			toReturn += ", that you are currently holding"
 		return toReturn
@@ -111,7 +127,7 @@ def GenWeapon(dict):
 	toReturn = Item()
 	try:
 		toReturn.name = dict['Name']
-		toReturn.ATK = dict['Attack']
+		toReturn.ATK = int(dict['Attack'])
 		toReturn.equipped = 0
 	# If dict is malformed, fails softly
 	except KeyError:
@@ -137,9 +153,9 @@ class Monster:
 def GenMonster(dict):
 	toReturn = Monster()
 	try:
-		toReturn.ATK = dict['Attack']
-		toReturn.Max_HP = dict['Health']
-		toReturn.HP = dict['Health']
+		toReturn.ATK = int(dict['Attack'])
+		toReturn.Max_HP = int(dict['Health'])
+		toReturn.HP = int(dict['Health'])
 		toReturn.name = dict['Name']
 	except KeyError:
 		pass
@@ -162,7 +178,7 @@ class Player:
 
 	# Prints ou the player's inventory, along with the slot number
 	def PrintInventory(self):
-		print("You are currently holding:")
+		print("Your bag contains:")
 		if len(self.inventory) == 0:
 			print("Nothing!")
 			return
@@ -171,10 +187,24 @@ class Player:
 			for item in self.inventory:
 				print("[" + str(i) + "] " + str(item))
 
+def GenPlayer(name, HP, ATK):
+	toReturn = Player()
+	toReturn.name = name
+	toReturn.HP = HP
+	toReturn.Max_HP = HP
+	toReturn.ATK = ATK
+	return toReturn
+
+def Heal(ent, amt):
+	ent.HP += amt
+	if ent.HP > ent.Max_HP:
+		ent.HP = ent.Max_HP
+
 # Places the given item into the user's inventory at the end
 def GiveItem(ent, item):
 	ent.inventory.append(item)
-	print("You pick up the " + str(item.name) + " and place it in slot " + str(len(ent.inventory)))
+	if type(ent) == type(Player()):
+		print("You pick up the " + str(item.name) + " and place it in slot " + str(len(ent.inventory)))
 
 # Removes the item in the given slot number
 def DropItem(ent, slot):
