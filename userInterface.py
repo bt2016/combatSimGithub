@@ -42,6 +42,7 @@ gameOver = False
 nextMonster = True
 newHealth = int(yourHealth)
 retreatVal = 0
+pickUp = False
 print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit")
 print ("To engage a monster, type monster")
 command = input("Command:    ")
@@ -61,7 +62,7 @@ while command != "quit":
 				monsterWeapon = monstWeap['Name']
 			print ("You are now engaged with this monster:")
 			print ("Name: ", monsterName)
-			print ("Health: ", monsterHealth)
+			print ("Health: ", newMonsterHealth)
 			print ("Attack: ", monsterAttack)	
 			monsterEngaged = True
 			monsterDead = False
@@ -83,6 +84,7 @@ while command != "quit":
 				monsterEngaged = False
 				monsterDied +=1
 				nextMonster = True
+				pickUp = True
 				print("You killed the monster")
 				print("The monster dropped this weapon: ", monsterWeapon, "  It has an attack of ", monstWeap['Attack'], "  To pick up, type pick up")
 			if newHealth <= 0:
@@ -142,9 +144,13 @@ while command != "quit":
 		if monsterEngaged == True:
 			print ("The monster is not yet dead so there is no weapon to pick up.")
 		elif monsterDead == True:
+			if pickUp == True:
 				print ("You now have this weapon: ", monsterWeapon)
 				yourWeapon = monsterWeapon
 				yourAttack = monstWeap['Attack']
+				pickUp = False
+			else:
+				print("You have already picked up the weapon.")
 		else:
 			print ("You are not engaged with a monster.")
 	elif command == "What is the answer to life, the universe, and everything?":
