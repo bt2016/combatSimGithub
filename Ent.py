@@ -174,6 +174,7 @@ class Player:
 # Places the given item into the user's inventory at the end
 def GiveItem(ent, item):
 	ent.inventory.append(item)
+	print("You pick up the " + str(item.name) + " and place it in slot " + str(len(ent.inventory)))
 
 # Removes the item in the given slot number
 def DropItem(ent, slot):
