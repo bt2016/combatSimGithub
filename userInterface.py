@@ -30,8 +30,14 @@ player = Ent.GenPlayer(name, 20, 5)
 
 num = randint(0,4)
 
-print ("You are: ")
+#print ("You are: ")
 print (player)
+print ("Your current weapon is: ",yourCurrentWeapon)
+
+#make sure that the weapon is in the player's inventory
+#also make sure that the weapon is equipped
+Ent.GiveItemInit(player, yourCurrentWeapon)
+Ent.EquipItem(player,1)
 
 #weapons call list entry return dict
 monsterDied = 0
@@ -43,8 +49,8 @@ gameOver = False
 nextMonster = True
 retreatVal = 0
 pickUp = False
-print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up, focus, inventory, equip, help, stats.  The help command lists what each command does. To quit, type quit")
-print ("To engage a monster, type monster",'\n')
+print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up, focus, inventory, equip, help, stats.  The help command lists what each command does. To quit, type quit.")
+print ("To engage a monster, type monster.",'\n')
 command = input("Command:    ")
 commandList = command.split()
 command = commandList[0]

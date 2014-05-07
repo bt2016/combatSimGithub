@@ -110,10 +110,15 @@ class Item:
 	# Prints out item name, and whether it is equipped
 	def __str__(self):
 		toReturn  = ""
-		if self.name.startswith(('a', 'e', 'i', 'o', 'u')):
-			toReturn += "An "
-		else:
-			toReturn += "A "
+		self.isVowel = 0
+		self.vowels = ['a','e','i','o','u']
+		for vowel in self.vowels:
+			if self.name.startswith(vowel):
+				self.isVowel = 1				
+			if self.isVowel == 1:
+				toReturn = "An "
+			else:
+				toReturn = "A "
 		toReturn += str(self.name)
 		if hasattr(self, 'equipped') and self.equipped == 1:
 			toReturn += ", that you are currently holding"
@@ -206,6 +211,10 @@ def GiveItem(ent, item):
 	ent.inventory.append(item)
 	if type(ent) == type(Player()):
 		print("You pick up the " + str(item.name) + " and place it in slot " + str(len(ent.inventory)))
+
+#adds the initial weapon to the inventory without printing the line
+def GiveItemInit(ent, item):
+	ent.inventory.append(item)
 
 # Removes the item in the given slot number
 def DropItem(ent, slot):
