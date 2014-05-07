@@ -43,7 +43,7 @@ gameOver = False
 nextMonster = True
 retreatVal = 0
 pickUp = False
-print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit")
+print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up, focus, inventory, equip, help, stats.  The help command lists what each command does. To quit, type quit")
 print ("To engage a monster, type monster",'\n')
 command = input("Command:    ")
 commandList = command.split()
@@ -61,7 +61,7 @@ while command != "quit":
 				nextMonster = False
 
 				wepChance = randint(0, 100)
-				if wepChance <= (10 * (num + 1)):
+				if wepChance <= (30 * (num + 1)):
 					weapon2 = randint(0,4)
 					Ent.GiveItem(currentMonster, Ent.GenWeapon(weapons[weapon2]))
 			print ("You are now engaged with this monster:")
@@ -176,6 +176,7 @@ while command != "quit":
 				print ("You have used up all your retreats... No cowards allowed")
 	elif command == "stats": #Displays your health and weapon, and if you are fighting a monster, displays its health and weapon
 		print (player)
+		player.PrintInventory ()
 		if monsterEngaged == True:
 			print ("You are currently fighting:\n" + str(currentMonster))
 	elif command == "help":#Outputs all of the commangs and what they do
@@ -186,6 +187,9 @@ while command != "quit":
 		print ("help       - displays commands")
 		print ("stats      - displays your statistics and those of the monster you are currently fighting")
 		print ("pick up    - picks up the defeated monster's weapon")
+		print ("focus      - focuses your attack to increase hit chance")
+		print ("inventory  - prints your inventory")
+		print ("equip      - changes the weapon you are holding")
 		print ("quit       - exits the game")
 	elif " ".join(commandList) == "What is the answer to life, the universe, and everything?":
 		print ("42")
@@ -208,7 +212,7 @@ while command != "quit":
 					slot = -1
 				Ent.EquipItem(player, slot) 
 	else:
-		print ("Invalid Command.  Please use: monster, attack, defend, retreat, help, stats, pick up, or quit")
+		print ("Invalid Command.  Please use: monster, attack, defend, retreat, help, stats, pick up, focus, inventory, equip, or quit")
 	
 	if gameOver == True:
 		print('\n')
