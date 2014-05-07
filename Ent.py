@@ -120,7 +120,7 @@ def GenWeapon(dict):
 
 class Monster:
 	def __str__(self):
-		toReturn = "Name: " + self.name + " HP: " + str(self.HP)  + "/" + str(self.Max_HP)
+		toReturn = "Name: " + self.name + " Health: " + str(self.HP)  + "/" + str(self.Max_HP) + " Attack: " + str(self.ATK)
 		return toReturn
 
 	def __init__(self):
