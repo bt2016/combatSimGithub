@@ -2,6 +2,7 @@
 
 import sys
 from random import randint
+from math import floor
 import Ent
 
 from record_jar_reader import record_jar_reader
@@ -21,20 +22,17 @@ weapon = randint(0,4)
 #yourWeapon = dict[weapon]
 yourWeaponDict = weapons[weapon]
 yourCurrentWeapon = Ent.GenWeapon(yourWeaponDict)
-yourWeapon = yourCurrentWeapon.name
-yourHealth = 20
-yourAttack = yourCurrentWeapon.ATK
+
+name = input("What would you like to be called?: ")
+if name == '':
+	name = 'Player'
+player = Ent.GenPlayer(name, 20, 5)
+
 num = randint(0,4)
-currentMonsterDict = monsters[num]
-monterName = currentMonsterDict['Name']
 
-print ("Health:      ", yourHealth)
-print ("Your weapon: ", yourWeapon)
-print ("Your attack: ", yourAttack)
-print ('')
+print ("You are: ")
+print (player)
 
-#monster call list entry return dict
-currentMonster = monsters[num]
 #weapons call list entry return dict
 monsterDied = 0
 #Initialize monsters
@@ -43,22 +41,29 @@ monsterDead = False
 MonsterCount = 0
 gameOver = False
 nextMonster = True
-newHealth = int(yourHealth)
 retreatVal = 0
 pickUp = False
 print ("Please enter one of the following commands: monster, attack, defend, retreat, pick up,  help, stats.  The help command lists what each command does. To quit, type quit")
-print ("To engage a monster, type monster")
+print ("To engage a monster, type monster",'\n')
 command = input("Command:    ")
+commandList = command.split()
+command = commandList[0]
 while command != "quit":
 	if command == "monster":#Engages the monster
 		if monsterEngaged == False:
 			if nextMonster == True:
-				num = randint(0,4)
+				if monsterDied > 4:
+					num = randint(0,4)
+				else:
+					num = randint(0, monsterDied)
 				currentMonsterDict = monsters[num]
 				currentMonster = Ent.GenMonster(currentMonsterDict)
 				nextMonster = False
-				weapon2 = randint(0,4)
-				monstWeap = weapons[weapon2]
+
+				wepChance = randint(0, 100)
+				if wepChance <= (10 * (num + 1)):
+					weapon2 = randint(0,4)
+					Ent.GiveItem(currentMonster, Ent.GenWeapon(weapons[weapon2]))
 			print ("You are now engaged with this monster:")
 			print (currentMonster)
 			monsterEngaged = True
@@ -72,19 +77,42 @@ while command != "quit":
 		else:
 			#Call attack function
 			#Sample attack
-			newHealth = newHealth - int(monsterAttack)
-			newMonsterHealth = newMonsterHealth - int(yourAttack)
-			print ("Your health: ", newHealth)
-			print ("Monster health: ", currentMonster.HP)
-			if currentMonster.HP <=0:
+
+#			newHealth = newHealth - int(monsterAttack)
+#			newMonsterHealth = newMonsterHealth - int(yourAttack)
+#			print ("Your health: ", newHealth)
+#			print ("Monster health: ", currentMonster.HP)
+#			if currentMonster.HP <=0:
+
+			Ent.Attack(player, currentMonster)
+			
+			# Monster performs a random action
+			monsterAction = randint(0, 2)
+			if currentMonster.HP > 0:
+				if monsterAction == 0:
+					Ent.Attack(currentMonster, player)
+				elif monsterAction == 1:
+					Ent.Defend(currentMonster)
+				elif monsterAction == 2:
+					Ent.Focus(currentMonster)
+			else:
+				print(currentMonster.name + " breathes its last!")
+			if currentMonster.HP <= 0:
 				monsterDead = True
 				monsterEngaged = False
 				monsterDied +=1
 				nextMonster = True
-				pickUp = True
 				print("You killed the monster")
-				print("The monster dropped this weapon: ", monsterWeapon, "  It has an attack of ", monstWeap['Attack'], "  To pick up, type pick up")
-			if newHealth <= 0:
+				if len(currentMonster.inventory) > 0:
+					print("\nThe monster dropped ", currentMonster.inventory[0])
+					ans = input("Pick it up? (Y/N): ")
+					while ans != 'y' and ans != 'Y' and ans != 'N' and ans != 'n':
+						input("Invalid answer, Pick it up? (Y/N)")
+					if ans == 'y' or ans == 'Y':
+						Ent.GiveItem(player, currentMonster.inventory[0])
+					elif ans == 'n' or ans == 'N':
+						print("You leave the item and move on")
+			if player.HP <= 0:
 				gameOver = True
 	elif command == "defend": #Defends against the monster's attack unless not engaged with one
 		if monsterEngaged == False:
@@ -92,15 +120,44 @@ while command != "quit":
 		else:
 			#Call defend function
 			#Sample defend
-			mod = randint(-10,10)
-			if mod == 0:
-				mod = 0.10
-			mod2 = 1/mod
-			newHealth -= mod2*int(currentMonster.ATK)
-			print ("SHIELD SHIELD!")
-			print ("Your health: ", newHealth)
-			print ("Monster's Health: ", currentMonster.HP)
-			if newHealth <= 0:
+
+#			mod = randint(-10,10)
+#			if mod == 0:
+#				mod = 0.10
+#			mod2 = 1/mod
+#			newHealth -= mod2*int(currentMonster.ATK)
+#			print ("SHIELD SHIELD!")
+#			print ("Your health: ", newHealth)
+#			print ("Monster's Health: ", currentMonster.HP)
+#			if newHealth <= 0:
+
+			Ent.Defend(player)
+
+			monsterAction = randint(0, 2)
+			if monsterAction == 0:
+				Ent.Attack(currentMonster, player)
+			elif monsterAction == 1:
+				Ent.Defend(currentMonster)
+			else:
+				Ent.Focus(currentMonster)
+
+			if player.HP <= 0:
+				gameOver = True
+	elif command == "focus":
+		if monsterEngaged == False:
+			print("You are not engaged with a monster. Enter a new command.")
+		else:
+			Ent.Focus(player)
+	
+			monsterAction = randint(0,2)
+			if monsterAction == 0:
+				Ent.Attack(currentMonster, player)
+			elif monsterAction == 1:
+				Ent.Defend(currentMonster)
+			else:
+				Ent.Focus(currentMonster)
+
+			if player.HP <= 0:
 				gameOver = True
 	elif command == "retreat": #Retreats from the battle
 		if retreatVal <= 1:
@@ -110,10 +167,7 @@ while command != "quit":
 				retreatVal += 1
 				#Call disengage function
 				monsterEngaged = False
-				if newHealth <= 20:
-					newHealth += (newHealth/2)
-					if newHealth >20:
-						newHealth = 20
+				Ent.Heal(player, floor(player.Max_HP / 10))
 				print ("When you fight and run away....You live to fight another day.")
 		else:
 			if monsterEngaged == False:
@@ -121,11 +175,9 @@ while command != "quit":
 			else:
 				print ("You have used up all your retreats... No cowards allowed")
 	elif command == "stats": #Displays your health and weapon, and if you are fighting a monster, displays its health and weapon
-		print ("Your health: ", newHealth)
-		print ("Your weapon: ", yourWeapon)
-		print ("Your attack: ", yourAttack)
+		print (player)
 		if monsterEngaged == True:
-			print ("Monster's ", currentMonster)
+			print ("You are currently fighting:\n" + str(currentMonster))
 	elif command == "help":#Outputs all of the commangs and what they do
 		print ("monster    - engages a monster in combat")
 		print ("attack     - attacks the monster")
@@ -135,21 +187,26 @@ while command != "quit":
 		print ("stats      - displays your statistics and those of the monster you are currently fighting")
 		print ("pick up    - picks up the defeated monster's weapon")
 		print ("quit       - exits the game")
-	elif command == "pick up":#Also need to scheck if monster is dead
-		if monsterEngaged == True:
-			print ("The monster is not yet dead so there is no weapon to pick up.")
-		elif monsterDead == True:
-			if pickUp == True:
-				print ("You now have this weapon: ", monsterWeapon)
-				yourWeapon = monsterWeapon
-				yourAttack = monstWeap['Attack']
-				pickUp = False
-			else:
-				print("You have already picked up the weapon.")
-		else:
-			print ("You are not engaged with a monster.")
-	elif command == "What is the answer to life, the universe, and everything?":
+	elif " ".join(commandList) == "What is the answer to life, the universe, and everything?":
 		print ("42")
+	elif command == "inventory":
+		player.PrintInventory()
+	elif command == "equip":
+		if len(player.inventory) == 0:
+			print ("You don't have anything to equip!")
+		else:
+			if len(commandList) < 2:
+				try:
+					slot = int(input("Which slot would you like to equip?: "))
+				except ValueError:
+					slot = -1
+				Ent.EquipItem(player, slot)
+			else:
+				try:
+					slot = int(commandList[1])
+				except ValueError:
+					slot = -1
+				Ent.EquipItem(player, slot) 
 	else:
 		print ("Invalid Command.  Please use: monster, attack, defend, retreat, help, stats, pick up, or quit")
 	
@@ -161,4 +218,6 @@ while command != "quit":
 	else:
 		print ('')
 		command = input("Command:   ")
+		commandList = command.split()
+		command = commandList[0]
 
