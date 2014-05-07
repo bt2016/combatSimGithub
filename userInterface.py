@@ -113,7 +113,7 @@ while command != "quit":
 					print("\nThe monster dropped ", currentMonster.inventory[0])
 					ans = input("Pick it up? (Y/N): ")
 					while ans != 'y' and ans != 'Y' and ans != 'N' and ans != 'n':
-						input("Invalid answer, Pick it up? (Y/N)")
+						ans = input("Invalid answer, Pick it up? (Y/N)")
 					if ans == 'y' or ans == 'Y':
 						Ent.GiveItem(player, currentMonster.inventory[0])
 					elif ans == 'n' or ans == 'N':
